@@ -12,10 +12,12 @@ How to run the application using Laradock?
 6. Install Laravel dependencies by running, _composer install_.
 7. Create you Laravel's .env file and configure your database credentials, you can check for the credentials in Laradock's .env file in line 334.
 8. Run migration to setup database tables,type in _php artisan migrate_.
+    ## NOTE
+
+    _If you happen to encounter connection refused error while running migration, try to change DB_HOST = 127.0.0.1 in Laravel's .env file. After running the migration, you may need to revert DB_HOST=mysql if connection error occurs when querying in the applications model_
+
 9. Open your browser and type localhost in the address bar.
 
 
-## NOTE
 
-_If you happen to encounter connection refused error while running migration, try to change DB_HOST = 127.0.0.1 in Laravel's .env file._
 

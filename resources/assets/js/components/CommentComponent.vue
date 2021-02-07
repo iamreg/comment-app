@@ -24,7 +24,7 @@
             return {
                 commentFormComponent : CommentFormComponent,
                 showReplyForm : false, //use to toggle comment/reply form visibility
-                replies : this.data.replies
+                replies : this.data.replies || []
             }
         },
         methods : {
