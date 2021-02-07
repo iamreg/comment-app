@@ -6,9 +6,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
 
-        <title>Post</title>
-
-        <link data-n-head="ssr" rel="icon" type="image/png" href="/img/logo.png">
+        <title>Trade Like A Pro | Post</title>
 
         <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
 

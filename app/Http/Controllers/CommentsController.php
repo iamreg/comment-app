@@ -7,14 +7,15 @@ use Illuminate\Http\Request;
 
 class CommentsController extends Controller
 {
-/**
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        $collection = Comment::all();//->sortByDesc('created_at');
+        $collection = Comment::with(['replies'])->whereNull('parent_id')->orderBy('created_at')->get();
+
         return response()->json($collection);
     }
 
@@ -28,13 +29,22 @@ class CommentsController extends Controller
     public function store(Request $request)
     {
         try {
+
+            $validator = Comment::validation($request->all());
+
+            if ($validator->fails()) {
+                return response()->json(['status' => 'error', 'message' => $validator->errors()->first()]);
+            }
+
+            //only create new instance on successful validation
             $comment = new Comment();
+
             $comment->name = $request->get('name');
             $comment->description = $request->get('comment');
 
             $level = 1;
 
-            if ($request->has('parent')) {
+            if ($request->has('parent_id')) {
                 $comment->parent_id = $request->get('parent_id');
 
                 $parent = Comment::find($comment->parent_id);

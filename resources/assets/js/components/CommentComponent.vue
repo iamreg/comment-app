@@ -2,15 +2,15 @@
     <div>
         <b-card class="mt-2">
             <b-card-text>
-                {{ comment.description }}
+                {{ data.description }}
             </b-card-text>
-            <b-card-text class="small text-muted">{{ comment.name }} • {{ comment.created_at | moment('from', 'now') }} • <b-link href="#" v-on:click="showCommentForm" class="card-link" v-if="comment.level < 3">Reply</b-link></b-card-text>
+            <b-card-text class="small text-muted">{{ data.name }} • {{ data.created_at | moment('from', 'now') }} <span v-if="data.level < 3"> • <b-link href="#" v-on:click="toggleVisibility(true)" class="card-link">Reply</b-link> </span></b-card-text>
         </b-card>
-        <component class="ml-5 mt-2" :is="commentFormComponent" v-if="showForm"></component>
-        <!-- <div class="ml-5 mt-2">
-            <hr/>
-            <comment-form-component @submitForm="addComment($event)"></comment-form-component>
-        </div> -->
+        <component class="ml-5 mt-2" :is="commentFormComponent" :parent_id="data.id" v-if="showForm" @resetForm="toggleVisibility($event)" @submitForm="addReply($event)"></component>
+
+        <!-- used recursive component, need to have component name property  -->
+        <comment-component v-for="reply in replies" :data="reply" :key="reply.id" class="ml-5">
+        </comment-component>
     </div>
 </template>
 
@@ -18,16 +18,22 @@
     import CommentFormComponent from './CommentFormComponent.vue'
 
     export default {
-        props : ['comment'],
+        props : ['data'],
+        name : 'comment', // added this in relations to using of recursive component
         data()  {
             return {
                 commentFormComponent : CommentFormComponent,
-                showForm : false
+                showForm : false, //use to toggle comment/reply form visibility
+                replies : this.data.replies
             }
         },
         methods : {
-            showCommentForm : function(){
-                this.showForm = true
+            toggleVisibility : function(isVisible){
+                this.showForm = isVisible
+            },
+            addReply : function(reply)
+            {
+                this.replies.push(reply);
             }
         }
     }

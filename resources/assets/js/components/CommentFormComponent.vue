@@ -26,7 +26,7 @@
                 ></b-form-input>
                 <b-input-group-append>
                     <b-button type="submit" size="sm" text="Button" variant="success">Submit</b-button>
-                    <b-button type="button" size="sm" text="Button" variant="secondary" v-on:click="resetForm" v-if="parent">Cancel</b-button>
+                    <b-button type="button" size="sm" text="Button" variant="secondary" v-on:click="resetForm" v-if="parent_id">Cancel</b-button>
                 </b-input-group-append>
 
                 <b-form-invalid-feedback id="name-live-feedback" v-if="!$v.form.name.required">
@@ -34,6 +34,10 @@
                 </b-form-invalid-feedback>
                 <b-form-invalid-feedback id="name-live-feedback" v-if="!$v.form.name.minLength">
                     Your name should be at least 2 characters in length.
+                </b-form-invalid-feedback>
+
+                <b-form-invalid-feedback id="name-live-feedback" v-if="!$v.form.name.maxLength">
+                    Your name should be at most 50 characters in length.
                 </b-form-invalid-feedback>
             </b-input-group>
         </b-form>
@@ -45,19 +49,19 @@
     import { required, minLength, maxLength } from 'vuelidate/lib/validators'
     export default {
         mixins: [validationMixin],
+        props : ['parent_id'],
         data() {
             return {
                 form: {
                     comment: '',
                     name: '',
-                },
-                show: true,
-                parent : null
+                    parent_id : this.parent_id
+                }
             }
         },
         validations : {
             form : {
-                name : { required, minLength: minLength(2) },
+                name : { required, minLength: minLength(2), maxLength : maxLength(50) },
                 comment : { required },
             }
         },
@@ -70,12 +74,15 @@
             resetForm(){
                 this.form = {
                     name: null,
-                    comment: null
+                    comment: null,
                 };
 
                 this.$nextTick(() => {
                     this.$v.$reset();
                 });
+
+                this.$emit('resetForm', false);
+
             },
             submitForm(){
                 let _this = this;
@@ -84,11 +91,11 @@
                     return;
                 }
 
-                this.processing = true;
-
                 axios.post('/post/comment/store', this.form).then((response) => {
                     if (response.data.status === 'success') {
                         _this.resetForm();
+
+                        //trigger updating of lists of replies or comments by passing the newly created comment
                         _this.$emit('submitForm', response.data.comment);
                     } else {
                        this.$toastr.e("Error", response.data.message);

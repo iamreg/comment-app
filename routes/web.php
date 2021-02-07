@@ -11,6 +11,11 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', 'PostsController@view')->name('post-view');
+
+Route::get('/post/comments', 'CommentsController@index')->name('comment-list');
+
+//wrapped in sanitation middleware to sanitize incoming data
+Route::group(['middleware' => ['xss.sanitation']], function(){
+    Route::post('/post/comment/store', 'CommentsController@store')->name('comment-store');
 });
