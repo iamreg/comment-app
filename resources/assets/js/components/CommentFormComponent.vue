@@ -6,7 +6,7 @@
                     id="comment"
                     v-model="$v.form.comment.$model"
                     :state = "validateState('comment')"
-                    placeholder="Write a comment..."
+                    v-bind:placeholder="commentFieldPlaceholder"
                     rows="3"
                     aria-describedby="message-live-feedback"
                 ></b-form-textarea>
@@ -50,6 +50,11 @@
     export default {
         mixins: [validationMixin],
         props : ['parent_id'],
+        computed : {
+            commentFieldPlaceholder : function(){
+                return 'Write a ' + ((this.parent_id) ? 'reply..' : 'comment..')
+            }
+        },
         data() {
             return {
                 form: {
