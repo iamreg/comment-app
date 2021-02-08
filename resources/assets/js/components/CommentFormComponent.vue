@@ -47,6 +47,9 @@
 <script>
     import { validationMixin } from 'vuelidate'
     import { required, minLength, maxLength } from 'vuelidate/lib/validators'
+    import { mapActions } from 'vuex'
+
+
     export default {
         mixins: [validationMixin],
         props : ['parent_id'],
@@ -71,6 +74,7 @@
             }
         },
         methods : {
+            ...mapActions(['createComment']),
             validateState(input){
                 const { $dirty, $error } = this.$v.form[input];
 
@@ -90,29 +94,12 @@
 
             },
             submitForm(){
-                let _this = this;
                 this.$v.form.$touch();
                 if (this.$v.form.$anyError) {
                     return;
                 }
 
-                axios.post('/post/comment/store', this.form).then((response) => {
-                    if (response.data.status === 'success') {
-                        _this.resetForm();
-
-                        //trigger updating of lists of replies or comments by passing the newly created comment
-                        _this.$emit('submitForm', response.data.comment);
-                    } else {
-                       this.$toastr.e("Error", response.data.message);
-
-                    }
-                })
-                .catch ((error) => {
-                    this.$toastr.s("Warning", "An error was encountered. Please try again later.");
-                })
-                .finally((response) => {
-
-                });
+                this.createComment(this.form);
             }
         }
     }

@@ -20,7 +20,7 @@
                 </div>
 
                 <hr/>
-                <comment-form-component @submitForm="addComment($event)"></comment-form-component>
+                <comment-form-component></comment-form-component>
             </b-col>
         </b-row>
     </b-container>
@@ -29,32 +29,19 @@
 <script>
     import CommentComponent from './CommentComponent.vue';
     import CommentFormComponent from './CommentFormComponent.vue'
+    import { mapGetters, mapActions } from 'vuex'
 
     export default {
-        components: { CommentFormComponent, CommentComponent },
-        data : function(){
-            return {
-                comments : []
-            }
+        name : 'PostComponent',
+        computed : mapGetters(['comments']),
+        methods : {
+            ...mapActions(['getComments'])
         },
         mounted(){
             this.getComments();
         },
-        methods : {
 
-            //performs get request to fetch all comments
-            getComments : function() {
-                let _this = this;
-                axios.get('/post/comments', ).then(response => {
-                    _this.comments = response.data;
-                });
-            },
 
-            //add new comment manually instead of calling getComments() everytime a new comment is added
-            //which I find possible resource extensive since it will fetch on all comments
-            addComment : function (comment) {
-                this.comments.push(comment);
-            }
-        }
+        components: { CommentFormComponent, CommentComponent },
     }
 </script>

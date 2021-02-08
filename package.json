@@ -23,6 +23,7 @@
         "bootstrap-vue": "^2.21.2",
         "vue-moment": "^4.1.0",
         "vue-toastr": "^2.1.2",
-        "vuelidate": "^0.7.6"
+        "vuelidate": "^0.7.6",
+        "vuex": "^3.6.2"
     }
 }

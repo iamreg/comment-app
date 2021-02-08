@@ -12,6 +12,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import VueToastr from "vue-toastr"
 import moment from 'vue-moment'
+import store from './store'
 
 window.Vue = require('vue');
 
@@ -30,5 +31,6 @@ Vue.component('comment-form-component', require('./components/CommentFormCompone
 Vue.component('comment-component', require('./components/CommentComponent.vue'));
 
 const app = new Vue({
-    el: '#app'
+    el: '#app',
+    store
 });

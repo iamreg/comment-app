@@ -6,7 +6,7 @@
             </b-card-text>
             <b-card-text class="small text-muted">{{ data.name }} • {{ data.created_at | moment('from', 'now') }} <span v-if="data.level < 3"> • <b-link href="#" v-on:click="toggleVisibility(true)" class="card-link">Reply</b-link> </span></b-card-text>
         </b-card>
-        <component class="ml-5 mt-2" :is="commentFormComponent" :parent_id="data.id" v-if="showReplyForm" @resetForm="toggleVisibility($event)" @submitForm="addReply($event)"></component>
+        <component class="ml-5 mt-2" :is="commentFormComponent" :parent_id="data.id" v-if="showReplyForm" @resetForm="toggleVisibility($event)"></component>
 
         <!-- used recursive component, need to have component name property  -->
         <comment-component v-for="reply in replies" :data="reply" :key="reply.id" class="ml-5">
@@ -31,10 +31,6 @@
             toggleVisibility : function(isVisible){
                 this.showReplyForm = isVisible
             },
-            addReply : function(reply)
-            {
-                this.replies.push(reply);
-            }
         }
     }
 </script>
